@@ -1,0 +1,26 @@
+name: app-person
+
+services:
+    db:
+        container_name: postgres-db
+        image: postgres:18
+        restart: always
+        ports:
+            - 35432:5432
+        environment:
+            POSTGRES_DB: $DB_NAME
+            POSTGRES_USER: $DB_USER
+            POSTGRES_PASSWORD: $DB_PWD
+        volumes:
+            - postgresdata:/var/lib/postgresql
+            - ./db/init:/docker-entrypoint-initdb.d
+        deploy:
+            resources:
+                limits:
+                    cpus: '1'
+                    memory: 1GB
+                reservations:
+                    cpus: '0.50'
+                    memory: 500M
+volumes:
+    postgresdata:
