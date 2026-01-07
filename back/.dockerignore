@@ -1,0 +1,5 @@
+node_modules
+.env
+exemple.env
+dockerfile
+.dockerignore
