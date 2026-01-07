@@ -26,9 +26,12 @@ services:
                     memory: 500M
     back:
         container_name: express-api
-        build: ./back
+        build: 
+            context: ./back
+            args:
+                NODE_VERSION: $API_NODE_VERSION
         ports:
-            - 33000:3000
+            - $API_PORT:3000
         environment:
             DB_HOST: db
             DB_NAME: $DB_NAME
@@ -39,6 +42,25 @@ services:
             - api-db-network
         depends_on:
             - db
+        deploy:
+            resources:
+                limits:
+                    cpus: '1'
+                    memory: 1GB
+                reservations:
+                    cpus: '0.50'
+                    memory: 500M
+    front:
+        container_name: react-web
+        build:
+            context: ./front
+            args:
+                NODE_API_URL: "${API_HOST}:${API_PORT}"
+                NODE_VERSION: $WEB_NODE_VERSION
+        ports:
+            - $WEB_PORT:80
+        depends_on:
+            - back
         deploy:
             resources:
                 limits:

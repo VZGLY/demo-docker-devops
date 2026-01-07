@@ -1,0 +1,12 @@
+ARG NODE_VERSION
+FROM node:$NODE_VERSION AS build
+ARG NODE_API_URL
+WORKDIR /src
+COPY . .
+RUN npm i
+ENV VITE_API_URL=$NODE_API_URL
+RUN npm run build
+
+FROM nginx:1.29 AS final
+COPY --from=build /src/dist /usr/share/nginx/html
+EXPOSE 80
